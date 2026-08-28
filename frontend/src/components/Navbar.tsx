@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, Building, User, LogIn, LogOut, LayoutDashboard } from 'lucide-react';
+import { Menu, X, Home, Building, User, LogIn, LogOut, LayoutDashboard, ShieldCheck } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 
 export default function Navbar() {

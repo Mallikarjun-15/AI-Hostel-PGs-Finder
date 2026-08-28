@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0F172A;
+  --color-foreground: #F8FAFC;
+  
+  --color-primary: #2563EB;
+  --color-primary-foreground: #F8FAFC;
+  
+  --color-secondary: #3B82F6;
+  --color-secondary-foreground: #F8FAFC;
+  
+  --color-card: rgba(255, 255, 255, 0.08);
+  --color-success: #22C55E;
+}
+
+@layer base {
+  body {
+    background: linear-gradient(135deg, var(--color-background), #1E3A8A);
+    background-attachment: fixed;
+    color: var(--color-foreground);
+    font-family: 'Inter', 'Poppins', sans-serif;
+    min-height: 100vh;
+    @apply antialiased;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border-radius: 0.75rem;
+  }
+
+  .text-gradient {
+    background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to right, #60A5FA, #2563EB);
+  }
+}

@@ -1,9 +1,14 @@
 const Property = require('../models/Property');
 const OpenAI = require('openai');
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let openai;
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+} else {
+  console.warn('OPENAI_API_KEY not found in environment variables. AI recommendation features will return offline fallback responses.');
+}
 
 // @desc    Process natural language query to find properties
 // @route   POST /api/ai/recommend
@@ -11,6 +16,10 @@ const openai = new OpenAI({
 const recommendProperties = async (req, res) => {
   const { query } = req.body;
   if (!query) return res.status(400).json({ message: 'Query is required' });
+
+  if (!openai) {
+    return res.status(503).json({ message: 'AI Recommendation service is currently unavailable (missing API key).' });
+  }
 
   try {
     // We ask OpenAI to parse the query into structured JSON for our MongoDB query
@@ -65,6 +74,10 @@ const recommendProperties = async (req, res) => {
 // @access  Public
 const chatBot = async (req, res) => {
   const { message } = req.body;
+
+  if (!openai) {
+    return res.status(503).json({ reply: 'I am currently offline as the AI service is not configured (missing API key).' });
+  }
 
   try {
     const prompt = `You are a helpful AI assistant for StayFinder, a platform to find Hostels and PGs. 

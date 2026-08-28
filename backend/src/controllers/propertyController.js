@@ -2,9 +2,14 @@ const Property = require('../models/Property');
 const OpenAI = require('openai');
 const { uploadToCloudinary } = require('../config/cloudinary');
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let openai;
+if (process.env.OPENAI_API_KEY) {
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+} else {
+  console.warn('OPENAI_API_KEY not found in environment variables. AI features will use offline fallbacks.');
+}
 
 // @desc    Get all properties (with optional filtering)
 // @route   GET /api/properties
@@ -90,6 +95,9 @@ const createProperty = async (req, res) => {
       const promptText = `Generate an attractive, concise listing description for a ${roomType} room in a PG/Hostel located in ${location}. It is for ${gender}. Facilities include: ${facilityArray.join(', ')}. Additional amenities: ${hasAC ? 'AC' : 'Non-AC'}, ${hasWiFi ? 'WiFi' : 'No WiFi'}, ${hasFood ? 'Food included' : 'No food'}, ${hasAttachedBathroom ? 'Attached bathroom' : 'Shared bathroom'}, ${hasParking ? 'Parking' : 'No parking'}. Price: ₹${price}. Keep it around 2-3 sentences.`;
 
       try {
+        if (!openai) {
+          throw new Error('OpenAI API key is missing');
+        }
         const response = await openai.chat.completions.create({
           model: "gpt-3.5-turbo",
           messages: [{ role: "user", content: promptText }],
